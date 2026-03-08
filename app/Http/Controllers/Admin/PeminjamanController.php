@@ -47,8 +47,8 @@ class PeminjamanController extends Controller
     {
         $pinjam = Peminjaman::findOrFail($id);
         
-        // Kembalikan stok karena batal pinjam
-        $buku = Buku::where('kode_buku', $pinjam->buku_id)->first();
+        // Kembalikan stok karena batal pinjam (Gunakan ID agar akurat)
+        $buku = Buku::find($pinjam->buku_id);
         if ($buku) {
             $buku->increment('stok');
         }
@@ -61,50 +61,47 @@ class PeminjamanController extends Controller
     /**
      * SISI SISWA: Mengajukan pengembalian (Lapor Kondisi)
      */
-// Bagian Siswa (ajukanPengembalian)
-public function ajukanPengembalian(Request $request, $id)
-{
-    $request->validate([
-        'catatan_siswa' => 'nullable|string'
-    ]);
+    public function ajukanPengembalian(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_siswa' => 'nullable|string'
+        ]);
 
-    $p = Peminjaman::findOrFail($id);
-    $p->update([
-        'status' => 'proses_kembali',
-        'catatan_siswa' => $request->catatan_siswa, // PASTIKAN BARIS INI ADA
-        'tanggal_kembali' => now()
-    ]);
+        $p = Peminjaman::findOrFail($id);
+        $p->update([
+            'status' => 'proses_kembali',
+            'catatan_siswa' => $request->catatan_siswa,
+            'tanggal_kembali' => now()
+        ]);
 
-    return back()->with('success', 'Buku berhasil dikembalikan, tunggu verifikasi admin!');
-}
+        return back()->with('success', 'Buku berhasil dikembalikan, tunggu verifikasi admin!');
+    }
 
     /**
      * SISI ADMIN: Verifikasi Akhir Pengembalian (Cek Kondisi & Denda)
      */
-public function verifikasiKembali(Request $request, $id)
-{
-    $peminjaman = Peminjaman::findOrFail($id);
+    public function verifikasiKembali(Request $request, $id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
 
-    // Cek kondisi dari form verifikasi admin
-    if ($request->kondisi == 'rusak' || $request->kondisi == 'hilang') {
-        $peminjaman->status = 'rusak';
-        $peminjaman->total_denda = $request->denda;
-    } else {
-        $peminjaman->status = 'kembali';
-        
-        // Tambahkan stok buku kembali hanya jika kondisi bagus
-        $buku = Buku::where('kode_buku', $peminjaman->buku_id)->first();
-        if($buku) {
-            $buku->increment('stok');
+        if ($request->kondisi == 'rusak' || $request->kondisi == 'hilang') {
+            $peminjaman->status = 'rusak';
+            $peminjaman->total_denda = $request->denda;
+        } else {
+            $peminjaman->status = 'kembali';
+            
+            // Tambahkan stok buku kembali hanya jika kondisi bagus
+            $buku = Buku::find($peminjaman->buku_id);
+            if($buku) {
+                $buku->increment('stok');
+            }
         }
+
+        $peminjaman->catatan_admin = $request->catatan_admin;
+        $peminjaman->save();
+
+        return back()->with('success', 'Buku berhasil diverifikasi!');
     }
-
-    // Simpan catatan dari Pustakawan/Admin
-    $peminjaman->catatan_admin = $request->catatan_admin; // Sesuaikan dengan name="catatan_admin" di form
-    $peminjaman->save();
-
-    return back()->with('success', 'Buku berhasil diverifikasi!');
-}
 
     /**
      * SISI ADMIN: Konfirmasi Pembayaran Denda
@@ -113,7 +110,6 @@ public function verifikasiKembali(Request $request, $id)
     {
         $pinjam = Peminjaman::findOrFail($id);
 
-        // Update status ke 'kembali' dan reset denda jadi 0 (karena sudah bayar)
         $pinjam->update([
             'status' => 'kembali',
             'total_denda' => 0,
@@ -128,9 +124,9 @@ public function verifikasiKembali(Request $request, $id)
      */
     public function bukuSaya()
     {
-        // Variabel harus $peminjaman agar cocok dengan @forelse($peminjaman as $p)
+        // PENTING: Gunakan 'pengguna_id' sesuai database kamu
         $peminjaman = Peminjaman::with('buku')
-            ->where('user_id', Auth::user()->pengenal)
+            ->where('pengguna_id', Auth::user()->pengenal)
             ->latest()
             ->get();
 
