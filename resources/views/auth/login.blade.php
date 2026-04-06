@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - BIBLIOX Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     @vite('resources/css/app.css')
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
@@ -12,25 +13,35 @@
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-slideDown { animation: slideDown 0.4s ease-out; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-[#F8FAFC] flex items-center justify-center min-h-screen p-6 font-['Plus_Jakarta_Sans']">
+<body class="bg-[#F8FAFC] flex items-center justify-center min-h-screen p-6">
     <div class="w-full max-w-md">
         <div class="text-center mb-10">
             <a href="/" class="inline-flex w-16 h-16 bg-blue-600 rounded-2xl items-center justify-center shadow-2xl shadow-blue-600/40 mb-4 transform -rotate-6 hover:rotate-0 transition-transform cursor-pointer">
                 <span class="text-white font-black text-3xl italic">X</span>
             </a>
             <h1 class="text-3xl font-extrabold text-slate-900 tracking-tighter uppercase">BIBLIOX LOGIN</h1>
-            <p class="text-slate-400 mt-2 font-medium">Silakan masuk ke akun Anda</p>
+            <p class="text-slate-400 mt-2 font-medium">Silakan masuk menggunakan ID Pengenal</p>
         </div>
 
+        {{-- Notifikasi Sukses --}}
         @if(session('success'))
             <div class="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 rounded-r-xl animate-slideDown text-sm font-bold">
                 {{ session('success') }}
             </div>
         @endif
 
+        {{-- Notifikasi Error --}}
+        @if(session('error'))
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-600 rounded-r-xl animate-slideDown text-sm font-bold">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="bg-white p-10 rounded-[40px] shadow-xl shadow-slate-200/50 border border-slate-100">
+            {{-- Error Validasi Laravel --}}
             @if($errors->any())
                 <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-600 rounded-r-xl animate-slideDown text-sm font-bold">
                     {{ $errors->first() }}
@@ -40,16 +51,16 @@
             <form action="{{ route('login') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Alamat Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" 
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">ID PENGANAL (Username)</label>
+                    <input type="text" name="pengenal" value="{{ old('pengenal') }}" 
                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:ring-4 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all font-semibold" 
-                        placeholder="nama@email.com" required>
+                        placeholder="Contoh: 2026001" required autofocus>
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-3 ml-1">
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Kata Sandi</label>
                     </div>
-                    <input type="password" name="kata_sandi" 
+                    <input type="password" name="password" 
                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:ring-4 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all font-semibold" 
                         placeholder="••••••••" required>
                 </div>
