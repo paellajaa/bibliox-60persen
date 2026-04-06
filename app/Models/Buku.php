@@ -18,6 +18,6 @@ class Buku extends Model
         'kategori', 
         'stok', 
         'tahun_terbit',
-        'cover' // <-- TAMBAHKAN INI AGAR DATA FOTO BISA MASUK
+        'cover' 
     ];
 }

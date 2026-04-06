@@ -15,7 +15,6 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        // Mengambil data yang butuh tindakan Admin
         $permintaan = Peminjaman::with(['user', 'buku'])
             ->whereIn('status', ['menunggu', 'proses_kembali', 'dipinjam', 'rusak'])
             ->latest()
@@ -37,7 +36,7 @@ class PeminjamanController extends Controller
             'tanggal_jatuh_tempo' => now()->addDays($pinjam->durasi_hari)
         ]);
 
-        return back()->with('success', 'Peminjaman telah disetujui! Buku resmi dipinjam.');
+        return back()->with('success', 'Peminjaman telah disetujui!');
     }
 
     /**
@@ -47,7 +46,6 @@ class PeminjamanController extends Controller
     {
         $pinjam = Peminjaman::findOrFail($id);
         
-        // Kembalikan stok karena batal pinjam (Gunakan ID agar akurat)
         $buku = Buku::find($pinjam->buku_id);
         if ($buku) {
             $buku->increment('stok');
@@ -55,11 +53,11 @@ class PeminjamanController extends Controller
 
         $pinjam->update(['status' => 'ditolak']);
         
-        return back()->with('success', 'Permintaan ditolak dan stok buku telah dikembalikan.');
+        return back()->with('success', 'Permintaan ditolak.');
     }
 
     /**
-     * SISI SISWA: Mengajukan pengembalian (Lapor Kondisi)
+     * SISI SISWA: Mengajukan pengembalian
      */
     public function ajukanPengembalian(Request $request, $id)
     {
@@ -74,11 +72,11 @@ class PeminjamanController extends Controller
             'tanggal_kembali' => now()
         ]);
 
-        return back()->with('success', 'Buku berhasil dikembalikan, tunggu verifikasi admin!');
+        return back()->with('success', 'Berhasil dikembalikan, tunggu verifikasi admin!');
     }
 
     /**
-     * SISI ADMIN: Verifikasi Akhir Pengembalian (Cek Kondisi & Denda)
+     * SISI ADMIN: Verifikasi Akhir Pengembalian
      */
     public function verifikasiKembali(Request $request, $id)
     {
@@ -89,8 +87,6 @@ class PeminjamanController extends Controller
             $peminjaman->total_denda = $request->denda;
         } else {
             $peminjaman->status = 'kembali';
-            
-            // Tambahkan stok buku kembali hanya jika kondisi bagus
             $buku = Buku::find($peminjaman->buku_id);
             if($buku) {
                 $buku->increment('stok');
@@ -109,24 +105,23 @@ class PeminjamanController extends Controller
     public function bayarDenda($id)
     {
         $pinjam = Peminjaman::findOrFail($id);
-
         $pinjam->update([
             'status' => 'kembali',
             'total_denda' => 0,
             'catatan_admin' => $pinjam->catatan_admin . ' | LUNAS PADA ' . now()->format('d/m/Y H:i')
         ]);
 
-        return back()->with('success', 'Pembayaran denda berhasil dikonfirmasi! Status siswa sudah bersih.');
+        return back()->with('success', 'Denda lunas!');
     }
 
     /**
      * SISI ANGGOTA: Daftar buku saya
+     * PERBAIKAN: Menggunakan kolom 'user_id' agar sinkron dengan database
      */
     public function bukuSaya()
     {
-        // PENTING: Gunakan 'pengguna_id' sesuai database kamu
         $peminjaman = Peminjaman::with('buku')
-            ->where('pengguna_id', Auth::user()->pengenal)
+            ->where('user_id', Auth::user()->pengenal) 
             ->latest()
             ->get();
 

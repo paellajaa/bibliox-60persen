@@ -9,25 +9,27 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
-    // Nama tabel harus sesuai dengan di database
+    // Pastikan ini sesuai dengan nama tabel di database Abang (berdasarkan error sebelumnya, namanya memang 'peminjaman')
     protected $table = 'peminjaman';
 
-    // Daftar kolom yang boleh diisi secara massal
-   protected $fillable = [
-    'user_id',
-    'buku_id',
-    'tanggal_pinjam',
-    'durasi_hari',
-    'tanggal_jatuh_tempo',
-    'tanggal_kembali',
-    'status',
-    'total_denda',
-    'status_denda',
-    'catatan_siswa', 
-    'catatan_admin'  
-];
+    // Daftar kolom yang diizinkan untuk diisi datanya (Mass Assignment)
+    protected $fillable = [
+        'user_id',
+        'buku_id',
+        'tanggal_pinjam',
+        'durasi_hari',
+        'tanggal_jatuh_tempo',
+        'tanggal_kembali',
+        'status',
+        'total_denda',
+        'status_denda',
+        'catatan_siswa', 
+        'catatan_admin'  
+    ];
+
     /**
-     * Hubungan ke model Buku
+     * Relasi ke model Buku
+     * (Mencari data buku berdasarkan 'buku_id' di tabel peminjaman yang cocok dengan 'kode_buku' di tabel buku)
      */
     public function buku()
     {
@@ -35,7 +37,8 @@ class Peminjaman extends Model
     }
 
     /**
-     * Hubungan ke model User
+     * Relasi ke model User
+     * (Mencari data user berdasarkan 'user_id' di tabel peminjaman yang cocok dengan 'pengenal' di tabel pengguna)
      */
     public function user()
     {

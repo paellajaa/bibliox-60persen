@@ -5,23 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // WAJIB ADA
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; // <-- WAJIB TAMBAH INI
 
 class UserController extends Controller
 {
-    /**
-     * Menampilkan daftar semua pengguna
-     */
     public function index()
     {
-        // 1. Ambil semua user terbaru
         $users = User::latest()->get();
         
-        // 2. Hitung total berdasarkan peran (Pastikan kolom 'peran' ada di DB)
         $totalAdmin = User::where('peran', 'admin')->count();
         $totalAnggota = User::where('peran', 'anggota')->count();
 
-        // 3. Kirim data ke view
         return view('admin.users.index', [
             'users' => $users,
             'totalAdmin' => $totalAdmin,
@@ -29,20 +24,23 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Menghapus akun pengguna
-     */
-    public function destroy($id)
+    public function destroy($pengenal)
     {
-        $user = User::findOrFail($id);
+        // 1. Cari user-nya
+        $user = User::where('pengenal', $pengenal)->firstOrFail();
         
-        // PROTEKSI: Jangan biarkan admin hapus dirinya sendiri
-        if ($user->id == Auth::id()) {
+        // 2. Proteksi hapus diri sendiri
+        if ($user->pengenal === Auth::user()->pengenal) {
             return back()->with('error', 'Waduh Bang, jangan hapus akun sendiri dong!');
         }
 
+        // 3. SAPU BERSIH RIWAYAT PAKSA DARI DATABASE LANGSUNG
+        // Kita tidak pakai Model, langsung tembak ke tabel 'peminjamans'
+        DB::table('peminjamans')->where('pengguna_id', $user->pengenal)->delete();
+
+        // 4. Hapus akun usernya
         $user->delete();
 
-        return back()->with('success', 'Akun berhasil dihapus!');
+        return back()->with('success', 'Akun beserta riwayat peminjamannya berhasil dibumihanguskan!');
     }
 }
