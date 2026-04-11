@@ -10,17 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('buku', function (Blueprint $table) {
-        $table->id('kode_buku'); // Kita pakai kode_buku sebagai primary key
-        $table->string('judul');
-        $table->string('penulis');
-        $table->string('kategori')->nullable();
-        $table->integer('stok')->default(0);
-        $table->year('tahun_terbit');
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('buku', function (Blueprint $table) {
+            $table->id('kode_buku'); 
+            $table->string('judul');
+            $table->string('penulis');
+            $table->string('kategori')->nullable();
+            $table->integer('stok')->default(0);
+            
+            // PERBAIKAN: Ganti year menjadi integer
+            $table->integer('tahun_terbit'); 
+            
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
