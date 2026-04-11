@@ -51,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
 
         // Manajemen Users
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
-        Route::delete('/admin/users/{pengenal}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 
     // --- KHUSUS ANGGOTA / SISWA ---

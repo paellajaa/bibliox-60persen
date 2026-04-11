@@ -54,18 +54,7 @@
                             </span>
                         </td>
                         <td class="px-8 py-6 text-right">
-                            @if($user->id != auth()->id())
-                                <form action="{{ url('/admin/users/hapus/' . $user->id) }}" method="POST" onsubmit="return confirm('Hapus akun ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    {{-- GHOST BUTTON STYLE --}}
-                                    <button type="submit" class="opacity-0 group-hover:opacity-100 border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-100 hover:bg-red-50 px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300">
-                                        Hapus Akun
-                                    </button>
-                                </form>
-                            @else
                                 <span class="text-slate-300 italic text-[10px] font-bold uppercase tracking-widest">Owner</span>
-                            @endif
                         </td>
                     </tr>
                     @endforeach
