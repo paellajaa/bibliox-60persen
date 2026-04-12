@@ -31,18 +31,21 @@
             </div>
 
             <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 px-6">Utama</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 px-5">Utama</p>
                 <a href="{{ Auth::user()->peran === 'admin' ? route('admin.dashboard') : route('anggota.dashboard') }}" 
-                   class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/dashboard') || Request::is('anggota/dashboard') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                    <i class="fa-solid fa-house text-lg w-6 text-center"></i> <span>Beranda</span>
+                   class="flex items-center gap-3 px-5 py-4 {{ Request::is('admin/dashboard') || Request::is('anggota/dashboard') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                    <i class="fa-solid fa-house text-lg w-6 text-center"></i> <span class="text-sm whitespace-nowrap">Beranda</span>
                 </a>
 
                 @if(Auth::user()->peran === 'admin')
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6 mb-2 px-6">Manajemen</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6 mb-2 px-5">Manajemen</p>
                     
                     <a href="{{ route('admin.peminjaman.index') }}" 
-                       class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/verifikasi*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all relative">
-                        <i class="fa-solid fa-clipboard-check text-lg w-6 text-center"></i> <span class="flex-1 text-sm">Pusat Verifikasi</span>
+                       class="flex items-center justify-between px-5 py-4 {{ Request::is('admin/verifikasi*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-clipboard-check text-lg w-6 text-center"></i> 
+                            <span class="text-sm whitespace-nowrap">Pusat Verifikasi</span>
+                        </div>
                         @php
                             $pCount = 0;
                             if (class_exists('App\Models\Peminjaman')) {
@@ -50,26 +53,26 @@
                             }
                         @endphp
                         @if($pCount > 0)
-                            <span class="bg-red-500 text-white text-[9px] px-2 py-1 rounded-full animate-pulse">{{ $pCount }}</span>
+                            <span class="bg-red-500 text-white text-[9px] px-2 py-1 rounded-full animate-pulse flex-shrink-0">{{ $pCount }}</span>
                         @endif
                     </a>
 
-                    <a href="{{ route('admin.buku.index') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/buku*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <i class="fa-solid fa-book text-lg w-6 text-center"></i> <span class="text-sm">Kelola Buku</span>
+                    <a href="{{ route('admin.buku.index') }}" class="flex items-center gap-3 px-5 py-4 {{ Request::is('admin/buku*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                        <i class="fa-solid fa-book text-lg w-6 text-center"></i> <span class="text-sm whitespace-nowrap">Kelola Buku</span>
                     </a>
 
-                    <a href="{{ route('admin.users.index') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/users*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <i class="fa-solid fa-users-gear text-lg w-6 text-center"></i> <span class="text-sm">Kelola User</span>
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-5 py-4 {{ Request::is('admin/users*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                        <i class="fa-solid fa-users-gear text-lg w-6 text-center"></i> <span class="text-sm whitespace-nowrap">Kelola User</span>
                     </a>
                 @endif
 
                 @if(Auth::user()->peran === 'anggota')
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6 mb-2 px-6">Layanan Siswa</p>
-                    <a href="{{ route('anggota.dashboard') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('anggota/dashboard') ? 'text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <i class="fa-solid fa-magnifying-glass text-lg w-6 text-center"></i> <span class="text-sm">Cari Buku</span>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6 mb-2 px-5">Layanan Siswa</p>
+                    <a href="{{ route('anggota.dashboard') }}" class="flex items-center gap-3 px-5 py-4 {{ Request::is('anggota/dashboard') ? 'text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                        <i class="fa-solid fa-magnifying-glass text-lg w-6 text-center"></i> <span class="text-sm whitespace-nowrap">Cari Buku</span>
                     </a>
-                    <a href="{{ route('anggota.buku-saya') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('anggota/buku-saya') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <i class="fa-solid fa-bookmark text-lg w-6 text-center"></i> <span class="text-sm">Buku Saya</span>
+                    <a href="{{ route('anggota.buku-saya') }}" class="flex items-center gap-3 px-5 py-4 {{ Request::is('anggota/buku-saya') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
+                        <i class="fa-solid fa-bookmark text-lg w-6 text-center"></i> <span class="text-sm whitespace-nowrap">Buku Saya</span>
                     </a>
                 @endif
             </nav>
@@ -77,8 +80,8 @@
             <div class="p-6 border-t border-slate-50">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="group w-full flex items-center gap-4 px-6 py-4 text-slate-400 hover:bg-red-50 hover:text-red-600 rounded-2xl font-bold transition-all">
-                        <i class="fa-solid fa-arrow-right-from-bracket text-lg w-6 text-center group-hover:-translate-x-1 transition-transform"></i> <span class="text-sm">LOG OUT</span>
+                    <button type="submit" class="group w-full flex items-center gap-3 px-5 py-4 text-slate-400 hover:bg-red-50 hover:text-red-600 rounded-2xl font-bold transition-all">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-lg w-6 text-center group-hover:-translate-x-1 transition-transform"></i> <span class="text-sm whitespace-nowrap uppercase">Log Out</span>
                     </button>
                 </form>
             </div>

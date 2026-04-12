@@ -19,9 +19,12 @@
 <body class="bg-[#F8FAFC] flex items-center justify-center min-h-screen p-6">
     <div class="w-full max-w-md">
         <div class="text-center mb-10">
-            <a href="/" class="inline-flex w-16 h-16 bg-blue-600 rounded-2xl items-center justify-center shadow-2xl shadow-blue-600/40 mb-4 transform -rotate-6 hover:rotate-0 transition-transform cursor-pointer">
-                <span class="text-white font-black text-3xl italic">X</span>
-            </a>
+            <div class="flex justify-center mb-6">
+                <a href="/" class="w-20 h-20 bg-white rounded-[2rem] p-3 shadow-xl border-4 border-slate-50 -rotate-6 transition-transform hover:rotate-0 duration-300 flex items-center justify-center cursor-pointer">
+                    <img src="{{ asset('logo.png') }}" alt="Logo Bibliox" class="w-full h-full object-contain rounded-xl" onerror="this.src='https://placehold.co/100x100?text=BX'">
+                </a>
+            </div>
+            
             <h1 class="text-3xl font-extrabold text-slate-900 tracking-tighter uppercase">BIBLIOX LOGIN</h1>
             <p class="text-slate-400 mt-2 font-medium">Silakan masuk menggunakan ID Pengenal</p>
         </div>
@@ -51,7 +54,7 @@
             <form action="{{ route('login') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">ID PENGANAL (Username)</label>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">ID PENGENAL (Username)</label>
                     <input type="text" name="pengenal" value="{{ old('pengenal') }}" 
                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:ring-4 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all font-semibold" 
                         placeholder="Contoh: 2026001" required autofocus>
@@ -70,8 +73,8 @@
                     <label for="remember" class="ml-2 block text-sm text-slate-500 font-medium">Ingat saya</label>
                 </div>
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-blue-600/30 hover:scale-[1.02] active:scale-95 text-lg italic tracking-wider">
-                    OTENTIKASI MASUK
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-blue-600/30 hover:scale-[1.02] active:scale-95 text-lg italic tracking-wider uppercase">
+                    Otentikasi Masuk
                 </button>
             </form>
         </div>

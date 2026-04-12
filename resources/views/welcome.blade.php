@@ -905,7 +905,7 @@
                     <div class="card-content">
                         
                         <div class="app-logo-wrapper">
-                            <img src="{{ asset('logo.jpeg') }}" alt="Logo Bibliox" class="app-logo-img" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                            <img src="{{ asset('logo.png') }}" alt="Logo Bibliox" class="app-logo-img" onerror="this.src='https://placehold.co/100x100?text=Logo'">
                         </div>
 
                         <h3 class="card-title">Koleksi Populer</h3>
