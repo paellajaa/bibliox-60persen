@@ -84,7 +84,7 @@ class PeminjamanController extends Controller
 
         if ($request->kondisi == 'rusak' || $request->kondisi == 'hilang') {
             $peminjaman->status = 'rusak';
-            $peminjaman->total_denda = $request->denda;
+            $peminjaman->denda = $request->denda; 
         } else {
             $peminjaman->status = 'kembali';
             $buku = Buku::find($peminjaman->buku_id);
@@ -107,7 +107,7 @@ class PeminjamanController extends Controller
         $pinjam = Peminjaman::findOrFail($id);
         $pinjam->update([
             'status' => 'kembali',
-            'total_denda' => 0,
+            'denda' => 0, 
             'catatan_admin' => $pinjam->catatan_admin . ' | LUNAS PADA ' . now()->format('d/m/Y H:i')
         ]);
 
@@ -116,7 +116,6 @@ class PeminjamanController extends Controller
 
     /**
      * SISI ANGGOTA: Daftar buku saya
-     * PERBAIKAN: Menggunakan kolom 'user_id' agar sinkron dengan database
      */
     public function bukuSaya()
     {

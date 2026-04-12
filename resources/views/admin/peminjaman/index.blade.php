@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="space-y-10 animate-fadeIn" x-data="{ openDenda: false, selectedId: '', selectedJudul: '', selectedSiswa: '' }">
+<div class="space-y-10 animate-fadeIn" x-data="{ openDenda: false, formAction: '', selectedJudul: '', selectedSiswa: '' }">
     
     <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex justify-between items-center">
         <div>
@@ -84,7 +84,7 @@
                         </td>
                         <td class="px-8 py-6 font-bold text-slate-700 text-sm">{{ $p->buku->judul }}</td>
                         <td class="px-8 py-6 text-right">
-                            <button @click="openDenda = true; selectedId = '{{ $p->id }}'; selectedJudul = '{{ $p->buku->judul }}'; selectedSiswa = '{{ $p->user->nama }}'" 
+                            <button @click="openDenda = true; formAction = '{{ route('admin.peminjaman.verifikasi-kembali', $p->id) }}'; selectedId = '{{ $p->id }}'; selectedJudul = '{{ $p->buku->judul }}'; selectedSiswa = '{{ $p->user->nama }}'" 
                                     style="background-color: #f97316 !important; color: white !important;"
                                     class="px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-orange-200 hover:opacity-90 transition-all">
                                 Periksa Buku
@@ -120,7 +120,7 @@
                             <p class="font-black text-slate-900 text-sm uppercase">{{ $d->user->nama }}</p>
                             <p class="text-[9px] text-slate-400 font-bold">Buku: {{ $d->buku->judul }}</p>
                         </td>
-                        <td class="px-8 py-6 font-black text-red-600 text-lg tracking-tighter">Rp {{ number_format($d->total_denda, 0, ',', '.') }}</td>
+                        <td class="px-8 py-6 font-black text-red-600 text-lg tracking-tighter">Rp {{ number_format($d->denda, 0, ',', '.') }}</td>
                         <td class="px-8 py-6 text-right">
                             <form action="{{ route('admin.peminjaman.bayar-denda', $d->id) }}" method="POST">
                                 @csrf
@@ -173,7 +173,7 @@
             <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-none mb-2">Verifikasi Buku</h3>
             <p class="text-slate-400 text-xs font-bold mb-8" x-text="selectedSiswa + ' - ' + selectedJudul"></p>
             
-            <form :action="'/admin/verifikasi/kembali-final/' + selectedId" method="POST">
+            <form :action="formAction" method="POST">
                 @csrf
                 <div class="space-y-6">
                     <div>
