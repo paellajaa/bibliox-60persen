@@ -16,8 +16,9 @@ class BukuController extends Controller
      */
     public function index()
     {
-        $semua_buku = Buku::latest()->paginate(10); 
-        return view('admin.buku.index', compact('semua_buku'));
+        // PERBAIKAN: Ubah $semua_buku menjadi $buku agar cocok dengan tampilan
+        $buku = Buku::latest()->paginate(10); 
+        return view('admin.buku.index', compact('buku'));
     }
 
     /**
@@ -104,46 +105,46 @@ class BukuController extends Controller
     /**
      * FUNGSI PINJAM BUKU DENGAN MAKSIMAL PINJAM (Poin 1.8 TYPES & Logic)
      */
-public function pinjam(Request $request, $id)
-{
-    // 1. Cari buku berdasarkan kode_buku
-    $buku = Buku::where('kode_buku', $id)->firstOrFail();
+    public function pinjam(Request $request, $id)
+    {
+        // 1. Cari buku berdasarkan kode_buku
+        $buku = Buku::where('kode_buku', $id)->firstOrFail();
 
-    // 2. Cek Stok
-    if ($buku->stok <= 0) {
-        return back()->with('error', 'Stok buku habis!');
+        // 2. Cek Stok
+        if ($buku->stok <= 0) {
+            return back()->with('error', 'Stok buku habis!');
+        }
+
+        // 3. Cek Batas Pinjam (Maksimal 3 buku aktif)
+        $aktif = Peminjaman::where('user_id', Auth::user()->pengenal)
+                    ->whereIn('status', ['menunggu', 'dipinjam', 'proses_kembali'])
+                    ->count();
+
+        if ($aktif >= 3) {
+            return back()->with('error', 'Kamu sudah pinjam 3 buku, balikin dulu ya!');
+        }
+
+        // 4. Validasi Durasi
+        $request->validate([
+            'durasi' => 'required|integer|min:1|max:14'
+        ]);
+
+        // FIX: Pastikan durasi dikonversi ke Integer agar Carbon tidak error
+        $durasi = (int) $request->durasi;
+
+        // 5. Simpan Data Peminjaman
+        Peminjaman::create([
+            'user_id' => Auth::user()->pengenal,
+            'buku_id' => $buku->kode_buku,
+            'tanggal_pinjam' => now(),
+            'durasi_hari' => $durasi, // Menggunakan variabel yang sudah di-cast ke int
+            'tanggal_jatuh_tempo' => now()->addDays($durasi), // Menggunakan variabel int
+            'status' => 'menunggu'
+        ]);
+
+        // 6. Kurangi stok buku
+        $buku->decrement('stok');
+
+        return redirect()->route('anggota.dashboard')->with('success', 'Berhasil diajukan!');
     }
-
-    // 3. Cek Batas Pinjam (Maksimal 3 buku aktif)
-    $aktif = Peminjaman::where('user_id', Auth::user()->pengenal)
-                ->whereIn('status', ['menunggu', 'dipinjam', 'proses_kembali'])
-                ->count();
-
-    if ($aktif >= 3) {
-        return back()->with('error', 'Kamu sudah pinjam 3 buku, balikin dulu ya!');
-    }
-
-    // 4. Validasi Durasi
-    $request->validate([
-        'durasi' => 'required|integer|min:1|max:14'
-    ]);
-
-    // FIX: Pastikan durasi dikonversi ke Integer agar Carbon tidak error
-    $durasi = (int) $request->durasi;
-
-    // 5. Simpan Data Peminjaman
-    Peminjaman::create([
-        'user_id' => Auth::user()->pengenal,
-        'buku_id' => $buku->kode_buku,
-        'tanggal_pinjam' => now(),
-        'durasi_hari' => $durasi, // Menggunakan variabel yang sudah di-cast ke int
-        'tanggal_jatuh_tempo' => now()->addDays($durasi), // Menggunakan variabel int
-        'status' => 'menunggu'
-    ]);
-
-    // 6. Kurangi stok buku
-    $buku->decrement('stok');
-
-    return redirect()->route('anggota.dashboard')->with('success', 'Berhasil diajukan!');
-}
 }

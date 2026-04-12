@@ -6,6 +6,7 @@
     <title>BIBLIOX - Modern Library System</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 5px; }
@@ -19,7 +20,9 @@
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col fixed h-full z-20 shadow-sm">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-2">
-                    <div class="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-200 font-bold text-xl">B</div>
+                    <div class="w-10 h-10 bg-cyan-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-200 font-bold text-xl">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
                     <h1 class="text-2xl font-black text-slate-800 tracking-tighter uppercase italic">BIBLIO<span class="text-cyan-600">X</span></h1>
                 </div>
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest font-extrabold ml-1">
@@ -31,7 +34,7 @@
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 px-6">Utama</p>
                 <a href="{{ Auth::user()->peran === 'admin' ? route('admin.dashboard') : route('anggota.dashboard') }}" 
                    class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/dashboard') || Request::is('anggota/dashboard') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                    <span class="text-xl">📊</span> Ringkasan
+                    <i class="fa-solid fa-house text-lg w-6 text-center"></i> <span>Beranda</span>
                 </a>
 
                 @if(Auth::user()->peran === 'admin')
@@ -39,7 +42,7 @@
                     
                     <a href="{{ route('admin.peminjaman.index') }}" 
                        class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/verifikasi*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all relative">
-                        <span class="text-xl">📥</span> <span class="flex-1 text-sm">Verifikasi Pinjam</span>
+                        <i class="fa-solid fa-clipboard-check text-lg w-6 text-center"></i> <span class="flex-1 text-sm">Pusat Verifikasi</span>
                         @php
                             $pCount = 0;
                             if (class_exists('App\Models\Peminjaman')) {
@@ -52,21 +55,21 @@
                     </a>
 
                     <a href="{{ route('admin.buku.index') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/buku*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <span class="text-xl">📚</span> <span class="text-sm">Kelola Buku</span>
+                        <i class="fa-solid fa-book text-lg w-6 text-center"></i> <span class="text-sm">Kelola Buku</span>
                     </a>
 
                     <a href="{{ route('admin.users.index') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('admin/users*') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <span class="text-xl">👥</span> <span class="text-sm">Kelola User</span>
+                        <i class="fa-solid fa-users-gear text-lg w-6 text-center"></i> <span class="text-sm">Kelola User</span>
                     </a>
                 @endif
 
                 @if(Auth::user()->peran === 'anggota')
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6 mb-2 px-6">Layanan Siswa</p>
                     <a href="{{ route('anggota.dashboard') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('anggota/dashboard') ? 'text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <span class="text-xl">🔍</span> <span class="text-sm">Cari Buku</span>
+                        <i class="fa-solid fa-magnifying-glass text-lg w-6 text-center"></i> <span class="text-sm">Cari Buku</span>
                     </a>
                     <a href="{{ route('anggota.buku-saya') }}" class="flex items-center gap-4 px-6 py-4 {{ Request::is('anggota/buku-saya') ? 'bg-cyan-50 text-cyan-600 font-black' : 'text-slate-500 hover:bg-slate-50' }} rounded-2xl font-bold transition-all">
-                        <span class="text-xl">📖</span> <span class="text-sm">Buku Saya</span>
+                        <i class="fa-solid fa-bookmark text-lg w-6 text-center"></i> <span class="text-sm">Buku Saya</span>
                     </a>
                 @endif
             </nav>
@@ -75,7 +78,7 @@
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="group w-full flex items-center gap-4 px-6 py-4 text-slate-400 hover:bg-red-50 hover:text-red-600 rounded-2xl font-bold transition-all">
-                        <span class="text-xl group-hover:scale-110 transition-transform">🚪</span> <span class="text-sm">LOG OUT</span>
+                        <i class="fa-solid fa-arrow-right-from-bracket text-lg w-6 text-center group-hover:-translate-x-1 transition-transform"></i> <span class="text-sm">LOG OUT</span>
                     </button>
                 </form>
             </div>

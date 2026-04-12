@@ -411,7 +411,7 @@
         .floating-card {
             width: 100%;
             max-width: 500px;
-            height: 600px;
+            min-height: 600px;
             background: white;
             border-radius: 30px;
             box-shadow: var(--shadow-xl);
@@ -431,26 +431,48 @@
             position: relative;
             z-index: 2;
         }
-        
-        .book-icon {
-            font-size: 6rem;
-            margin-bottom: 30px;
-            display: block;
+
+        /* INI STYLE UNTUK LOGO APP DI CARD */
+        .app-logo-wrapper {
+            width: 110px;
+            height: 110px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 2rem;
+            padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 4px solid #f8fafc;
+            transform: rotate(-3deg);
+            transition: all 0.4s ease;
             animation: float 4s ease-in-out infinite;
+        }
+
+        .app-logo-wrapper:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+        }
+
+        .app-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 1.5rem;
         }
         
         .card-title {
             font-size: 2.2rem;
-            font-weight: 800;
+            font-weight: 900;
             color: var(--dark);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
         
         .card-subtitle {
             color: #64748b;
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
+            font-size: 1rem;
+            margin-bottom: 35px;
+            padding: 0 20px;
         }
         
         .book-list {
@@ -458,7 +480,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         
         .book-item {
@@ -492,11 +514,13 @@
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 5px;
+            text-align: left;
         }
         
         .book-info p {
             font-size: 0.8rem;
             color: #64748b;
+            text-align: left;
         }
         
         .card-bg {
@@ -798,7 +822,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="logo">BIBLIOX</div>
         
@@ -824,7 +847,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-bg">
             <div class="floating-shapes">
@@ -832,7 +854,6 @@
                 <div class="shape"></div>
                 <div class="shape"></div>
             </div>
-            <!-- Rive Animation Container -->
             <div id="rive-animation"></div>
         </div>
         
@@ -882,9 +903,13 @@
             <div class="hero-visual">
                 <div class="floating-card fade-in">
                     <div class="card-content">
-                        <div class="book-icon">📚</div>
+                        
+                        <div class="app-logo-wrapper">
+                            <img src="{{ asset('logo.jpeg') }}" alt="Logo Bibliox" class="app-logo-img" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                        </div>
+
                         <h3 class="card-title">Koleksi Populer</h3>
-                        <p class="card-subtitle">Update Mingguan BIBLIOX</p>
+                        <p class="card-subtitle">Buku yang paling sering dipinjam bulan ini</p>
                         
                         <div class="book-list">
                             <div class="book-item">
@@ -922,7 +947,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features" id="features">
         <div class="section-header fade-in">
             <span class="section-subtitle">Mengapa Memilih BIBLIOX</span>
@@ -1002,7 +1026,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer id="contact">
         <div class="footer-content">
             <div class="footer-col">
@@ -1136,28 +1159,6 @@
             });
         });
 
-        // Initialize Rive animation
-        // Note: You need to replace the URL with your actual Rive animation file
-        // For now, we'll use a fallback if Rive is not available
-        if (typeof rive !== 'undefined') {
-            const r = new rive.Rive({
-                src: 'https://cdn.rive.app/animations/off_road_car_v7.riv',
-                canvas: document.getElementById('rive-animation'),
-                autoplay: true,
-                stateMachines: 'state_machine_name',
-                onLoad: () => {
-                    r.resizeDrawingSurfaceToCanvas();
-                },
-            });
-        } else {
-            // Fallback background gradient animation
-            const riveContainer = document.getElementById('rive-animation');
-            riveContainer.style.background = 'linear-gradient(135deg, #2563eb, #06b6d4, #8b5cf6)';
-            riveContainer.style.backgroundSize = '400% 400%';
-            riveContainer.style.animation = 'gradientShift 15s ease infinite';
-            riveContainer.style.opacity = '0.05';
-        }
-
         // Interactive stats counter
         const statNumbers = document.querySelectorAll('.stat-number');
         const statsSection = document.querySelector('.hero');
@@ -1203,9 +1204,8 @@
             });
         });
 
-        // Add typing effect to hero title (optional)
+        // Add typing effect to hero title
         const heroTitle = document.querySelector('.gradient-text');
-        const originalText = heroTitle.textContent;
         const texts = ['Tanpa Batas', 'Dimana Saja', 'Kapan Saja', 'Gratis Akses'];
         let currentTextIndex = 0;
         
