@@ -22,5 +22,7 @@ class User extends Authenticatable
     public function getAuthPassword()
     {
         return $this->kata_sandi;
+
+        
     }
 }
