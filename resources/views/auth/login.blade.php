@@ -54,7 +54,7 @@
             <form action="{{ route('login') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">ID PENGENAL (Username)</label>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">ID PENGENAL (Email)</label>
                     <input type="text" name="pengenal" value="{{ old('pengenal') }}" 
                         class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 focus:ring-4 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all font-semibold" 
                         placeholder="Contoh: 2026001" required autofocus>

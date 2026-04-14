@@ -14,21 +14,19 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+public function login(Request $request) {
         $request->validate([
-            'pengenal' => 'required',
+            'pengenal' => 'required', 
             'password' => 'required',
         ]);
 
-        // Logic login bisa pake Email atau ID Pengenal
-        $fieldType = filter_var($request->pengenal, FILTER_VALIDATE_EMAIL) ? 'email' : 'pengenal';
-
-        if (Auth::attempt([$fieldType => $request->pengenal, 'password' => $request->password])) {
+        
+        if (Auth::attempt(['email' => $request->pengenal, 'password' => $request->password])) {
             $request->session()->regenerate();
             return $this->redirectUser();
         }
 
-        return back()->with('error', 'Login Gagal! ID atau Password salah.')->withInput();
+        return back()->with('error', 'Login Gagal! Email atau Password salah.')->withInput();
     }
 
     public function showRegister() {
@@ -37,7 +35,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // 1. Validasi Data
         $request->validate([
             'nama' => 'required|string|max:255',
             'username' => 'required|string|email|max:255|unique:pengguna,email', 
@@ -47,11 +44,9 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.'
         ]);
 
-        // 2. Generate Pengenal Otomatis
         $count = User::count() + 1;
         $pengenal = date('Y') . str_pad($count, 3, '0', STR_PAD_LEFT);
 
-        // 3. Simpan ke Database
         $user = User::create([
             'pengenal'   => $pengenal,
             'nama'       => $request->nama,
@@ -60,7 +55,6 @@ class AuthController extends Controller
             'peran'      => 'anggota',
         ]);
 
-        // 4. Langsung Login
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -72,12 +66,12 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        // PERBAIKAN: Sekarang balik ke Landing Page (route home)
         return redirect()->route('home');
     }
 
     private function redirectUser() {
-        return Auth::user()->peran === 'admin' 
+        // PERBAIKAN: strtolower agar kebal terhadap huruf besar/kecil di database
+        return strtolower(Auth::user()->peran) === 'admin' 
             ? redirect()->intended('/admin/dashboard') 
             : redirect()->intended('/anggota/dashboard');
     }
