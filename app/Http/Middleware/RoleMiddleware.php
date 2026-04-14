@@ -8,12 +8,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, $role): Response
-    {
-        if (!auth()->check() || auth()->user()->peran !== $role) {
-            abort(403, 'Akses Dilarang!');
-        }
-
-        return $next($request);
+   public function handle(Request $request, Closure $next, $role): Response
+{
+    // PERBAIKAN: Gunakan strtolower untuk perbandingan role
+    if (!auth()->check() || strtolower(auth()->user()->peran) !== strtolower($role)) {
+        abort(403, 'Akses Dilarang!');
     }
+
+    return $next($request);
+}
 }

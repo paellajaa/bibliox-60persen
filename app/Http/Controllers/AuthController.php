@@ -14,19 +14,20 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-public function login(Request $request) {
+    public function login(Request $request) {
         $request->validate([
             'pengenal' => 'required', 
             'password' => 'required',
         ]);
 
-        
-        if (Auth::attempt(['email' => $request->pengenal, 'password' => $request->password])) {
+        // PERBAIKAN: Laravel harus mencari di kolom 'pengenal', bukan 'email'
+        // Karena di User.php Anda sudah set getAuthPassword(), 'password' di sini otomatis mengecek ke 'kata_sandi'
+        if (Auth::attempt(['pengenal' => $request->pengenal, 'password' => $request->password])) {
             $request->session()->regenerate();
             return $this->redirectUser();
         }
 
-        return back()->with('error', 'Login Gagal! Email atau Password salah.')->withInput();
+        return back()->with('error', 'Login Gagal! ID atau Password salah.')->withInput();
     }
 
     public function showRegister() {
@@ -70,9 +71,10 @@ public function login(Request $request) {
     }
 
     private function redirectUser() {
-        // PERBAIKAN: strtolower agar kebal terhadap huruf besar/kecil di database
-        return strtolower(Auth::user()->peran) === 'admin' 
-            ? redirect()->intended('/admin/dashboard') 
-            : redirect()->intended('/anggota/dashboard');
+        $peran = strtolower(Auth::user()->peran);
+        if ($peran === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
+        return redirect()->intended('/anggota/dashboard');
     }
 }

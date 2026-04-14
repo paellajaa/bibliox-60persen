@@ -10,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $table = 'pengguna';
-    protected $primaryKey = 'pengenal';
+    protected $primaryKey = 'pengenal'; 
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -18,13 +18,7 @@ class User extends Authenticatable
 
     protected $hidden = ['kata_sandi', 'remember_token'];
 
-    // Memberitahu Laravel nama kolom password kita adalah 'kata_sandi'
-    public function getAuthPasswordName()
-    {
-        return 'kata_sandi';
-    }
-
-    // Mengambil nilai password untuk dicocokkan
+    // Menghubungkan kolom password bawaan Laravel ke kolom kata_sandi Anda
     public function getAuthPassword()
     {
         return $this->kata_sandi;
