@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up() {
         Schema::table('buku', function (Blueprint $table) {
-            $table->string('cover')->nullable()->after('judul'); // Kolom simpan nama foto
+            $table->string('cover')->nullable()->after('judul'); 
         });
     }
 

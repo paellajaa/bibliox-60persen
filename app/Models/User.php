@@ -18,7 +18,6 @@ class User extends Authenticatable
 
     protected $hidden = ['kata_sandi', 'remember_token'];
 
-    // WAJIB: Kasih tahu Laravel kalau kolom password namanya kata_sandi
     public function getAuthPassword()
     {
         return $this->kata_sandi;

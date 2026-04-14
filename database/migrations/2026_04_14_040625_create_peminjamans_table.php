@@ -9,7 +9,7 @@ return new class extends Migration {
 {
     Schema::create('peminjaman', function (Blueprint $col) {
         $col->id();
-        // UBAH DUA BARIS INI MENJADI STRING
+        // 
         $col->string('user_id'); 
         $col->string('buku_id'); 
         

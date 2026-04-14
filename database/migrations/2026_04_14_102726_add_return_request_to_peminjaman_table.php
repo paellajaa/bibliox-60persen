@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
        Schema::table('peminjaman', function (Blueprint $table) {
-        $table->text('catatan_siswa')->nullable(); // Siswa lapor kondisi
-        $table->text('catatan_admin')->nullable(); // Admin kasih alasan denda
+        $table->text('catatan_siswa')->nullable(); 
+        $table->text('catatan_admin')->nullable(); 
         $table->enum('status', ['menunggu', 'dipinjam', 'proses_kembali', 'kembali', 'ditolak', 'rusak'])->change();
     });
     }

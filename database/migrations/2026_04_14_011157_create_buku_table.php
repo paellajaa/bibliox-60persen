@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('kategori')->nullable();
             $table->integer('stok')->default(0);
             
-            // PERBAIKAN: Ganti year menjadi integer
+            
             $table->integer('tahun_terbit'); 
             
             $table->timestamps();

@@ -9,10 +9,10 @@ class Peminjaman extends Model
 {
     use HasFactory;
 
-    // Pastikan ini sesuai dengan nama tabel di database Abang (berdasarkan error sebelumnya, namanya memang 'peminjaman')
+
     protected $table = 'peminjaman';
 
-    // Daftar kolom yang diizinkan untuk diisi datanya (Mass Assignment)
+    
     protected $fillable = [
         'user_id',
         'buku_id',
