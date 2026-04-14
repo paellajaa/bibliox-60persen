@@ -9,7 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengguna', function (Blueprint $table) {
-            $table->id('pengenal'); // Primary Key custom
+            // UBAH BARIS INI:
+            $table->string('pengenal', 20)->primary(); 
+            
             $table->string('nama');
             $table->string('email')->unique();
             $table->enum('peran', ['admin', 'anggota'])->default('anggota');
@@ -17,6 +19,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        
+        // ... (kode lainnya biarkan sama)
         
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
