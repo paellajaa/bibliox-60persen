@@ -15,14 +15,25 @@ class User extends Authenticatable
     protected $keyType = 'string';
 
     protected $fillable = ['nama', 'pengenal', 'email', 'kata_sandi', 'peran'];
-
     protected $hidden = ['kata_sandi', 'remember_token'];
 
-    // Menghubungkan kolom password bawaan Laravel ke kolom kata_sandi Anda
     public function getAuthPassword()
     {
         return $this->kata_sandi;
+    }
 
-        
+    public function getAuthIdentifierName()
+    {
+        return 'pengenal';
+    }
+
+    public function getAuthIdentifier()
+    {
+        return (string) $this->{$this->getAuthIdentifierName()};
+    }
+
+    public function getAuthPasswordName()
+    {
+        return 'kata_sandi';
     }
 }
